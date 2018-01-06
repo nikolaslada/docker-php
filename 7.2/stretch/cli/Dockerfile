@@ -25,7 +25,11 @@ ENV PHPIZE_DEPS \
 		libc-dev \
 		make \
 		pkg-config \
-		re2c
+		re2c \
+		libc6 \
+		ucf \
+		libbz2-1.0 \
+		libgmp10
 RUN apt-get update && apt-get install -y \
 		$PHPIZE_DEPS \
 		ca-certificates \
@@ -55,9 +59,9 @@ ENV PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie"
 
 ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F
 
-ENV PHP_VERSION 7.2.0
-ENV PHP_URL="https://secure.php.net/get/php-7.2.0.tar.xz/from/this/mirror" PHP_ASC_URL="https://secure.php.net/get/php-7.2.0.tar.xz.asc/from/this/mirror"
-ENV PHP_SHA256="87572a6b924670a5d4aac276aaa4a94321936283df391d702c845ffc112db095" PHP_MD5=""
+ENV PHP_VERSION 7.2.1
+ENV PHP_URL="https://secure.php.net/get/php-7.2.1.tar.xz/from/this/mirror" PHP_ASC_URL="https://secure.php.net/get/php-7.2.1.tar.xz.asc/from/this/mirror"
+ENV PHP_SHA256="6c6cf82fda6660ed963821eb0525214bb3547e8e29f447b9c15b2d8e6efd8822" PHP_MD5=""
 
 RUN set -xe; \
 	\
@@ -137,6 +141,64 @@ RUN set -xe \
 		--enable-mbstring \
 # --enable-mysqlnd is included here because it's harder to compile after the fact than extensions are (since it's a plugin for several extensions, not an extension in itself)
 		--enable-mysqlnd \
+# new enabled/disabled modules
+		--enable-bcmath \
+		--with-bz2="/lib/$debMultiarch" \
+		--enable-calendar \
+		--enable-ctype \
+		--enable-dom \
+		--without-enchant \
+		--enable-exif \
+		--enable-fileinfo \
+		--enable-filter \
+		--disable-gcov \
+		--with-gettext=/lib/bin \
+		--with-gmp="/lib/$debMultiarch" \
+		--enable-hash \
+		--with-iconv \
+		--enable-intl \
+		--enable-ipv6 \
+		--enable-json \
+		--without-kerberos \
+		--enable-libxml \
+		--enable-phar \
+		--enable-pdo \
+		--enable-opcache \
+		--with-pgsql="/lib/$debMultiarch" \
+		--enable-posix \
+		--without-pspell \
+		--without-recode \
+		--enable-simplexml \
+		--disable-shmop \
+		--without-snmp \
+		--enable-soap \
+		--enable-sockets \
+		--enable-sysvmsg \
+		--enable-sysvsem \
+		--enable-sysvshm \
+		--without-tidy \
+		--enable-tokenizer \
+		--disable-wddx \
+		--enable-xml \
+		--disable-xmlreader \
+		--disable-xmlwrite \
+		--with-xmlrpc \
+		--without-cdb \
+		--disable-flatfile \
+		--enable-inifile \
+		--without-qdbm \
+		--without-lmdb \
+		--with-gd \
+		--without-unixODBC \
+		--without-iodbc \
+		--without-oci8 \
+		--without-pdo-dblib \
+		--without-pdo-odbc \
+		--without-pdo-oci \
+		--without-mm \
+		--with-pic \
+		--disable-embed \
+		--disable-phpdbg \
 # https://wiki.php.net/rfc/argon2_password_hash (7.2+)
 		--with-password-argon2 \
 		\

@@ -25,7 +25,11 @@ ENV PHPIZE_DEPS \
 		libc-dev \
 		make \
 		pkg-config \
-		re2c
+		re2c \
+		libc6 \
+		ucf \
+		libbz2-1.0 \
+		libgmp10
 RUN apt-get update && apt-get install -y \
 		$PHPIZE_DEPS \
 		ca-certificates \
@@ -55,9 +59,9 @@ ENV PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie"
 
 ENV GPG_KEYS A917B1ECDA84AEC2B568FED6F50ABC807BD5DCD0 528995BFEDFBA7191D46839EF9BA0ADA31CBD89E
 
-ENV PHP_VERSION 7.1.12
-ENV PHP_URL="https://secure.php.net/get/php-7.1.12.tar.xz/from/this/mirror" PHP_ASC_URL="https://secure.php.net/get/php-7.1.12.tar.xz.asc/from/this/mirror"
-ENV PHP_SHA256="a0118850774571b1f2d4e30b4fe7a4b958ca66f07d07d65ebdc789c54ba6eeb3" PHP_MD5=""
+ENV PHP_VERSION 7.1.13
+ENV PHP_URL="https://secure.php.net/get/php-7.1.13.tar.xz/from/this/mirror" PHP_ASC_URL="https://secure.php.net/get/php-7.1.13.tar.xz.asc/from/this/mirror"
+ENV PHP_SHA256="1a0b3f2fb61959b57a3ee01793a77ed3f19bde5aa90c43dcacc85ea32f64fc10" PHP_MD5=""
 
 RUN set -xe; \
 	\
@@ -136,6 +140,64 @@ RUN set -xe \
 		--enable-mbstring \
 # --enable-mysqlnd is included here because it's harder to compile after the fact than extensions are (since it's a plugin for several extensions, not an extension in itself)
 		--enable-mysqlnd \
+# new enabled/disabled modules
+		--enable-bcmath \
+		--with-bz2="/lib/$debMultiarch" \
+		--enable-calendar \
+		--enable-ctype \
+		--enable-dom \
+		--without-enchant \
+		--enable-exif \
+		--enable-fileinfo \
+		--enable-filter \
+		--disable-gcov \
+		--with-gettext=/lib/bin \
+		--with-gmp="/lib/$debMultiarch" \
+		--enable-hash \
+		--with-iconv \
+		--enable-intl \
+		--enable-ipv6 \
+		--enable-json \
+		--without-kerberos \
+		--enable-libxml \
+		--enable-phar \
+		--enable-pdo \
+		--enable-opcache \
+		--with-pgsql="/lib/$debMultiarch" \
+		--enable-posix \
+		--without-pspell \
+		--without-recode \
+		--enable-simplexml \
+		--disable-shmop \
+		--without-snmp \
+		--enable-soap \
+		--enable-sockets \
+		--enable-sysvmsg \
+		--enable-sysvsem \
+		--enable-sysvshm \
+		--without-tidy \
+		--enable-tokenizer \
+		--disable-wddx \
+		--enable-xml \
+		--disable-xmlreader \
+		--disable-xmlwrite \
+		--with-xmlrpc \
+		--without-cdb \
+		--disable-flatfile \
+		--enable-inifile \
+		--without-qdbm \
+		--without-lmdb \
+		--with-gd \
+		--without-unixODBC \
+		--without-iodbc \
+		--without-oci8 \
+		--without-pdo-dblib \
+		--without-pdo-odbc \
+		--without-pdo-oci \
+		--without-mm \
+		--with-pic \
+		--disable-embed \
+		--disable-phpdbg \
 		\
 		--with-curl \
 		--with-libedit \
